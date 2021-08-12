@@ -67,6 +67,30 @@ function authenticateWithApi(req, res, url, client_secret) {
                     if (err) throw err;
                 }
             );
+            getUserData(res, url);
+            res.send(response.data);
+        })
+        .catch((error) => {
+            if (error.response) {
+                res.status(error.response.status).send(error.response.data);
+            } else {
+                res.status(400).send(error.message);
+            }
+        });
+}
+
+function getUserData(res, url) {
+    const params = new URLSearchParams();
+    params.append('id', 'me');
+
+    axios
+        .get(url + '/api/users', params, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Accept: 'application/vnd.c2logbook.v1+json'
+            }
+        })
+        .then((response) => {
             res.send(response.data);
         })
         .catch((error) => {
