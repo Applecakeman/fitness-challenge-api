@@ -1,5 +1,3 @@
-const config = require('config');
-
 const https = require('https');
 const fs = require('fs');
 const tokens = require('./router/oauth/access_token');
