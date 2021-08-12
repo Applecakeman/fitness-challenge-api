@@ -1,0 +1,29 @@
+{
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "node": "^16.6.1",
+    "prettier": "2.3.2"
+  },
+  "name": "fitness-challenge-api",
+  "description": "",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Applecakeman/fitness-challenge-api.git"
+  },
+  "author": "Sebastian Baier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Applecakeman/fitness-challenge-api/issues"
+  },
+  "homepage": "https://github.com/Applecakeman/fitness-challenge-api#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "joi": "^17.4.2"
+  }
+}
