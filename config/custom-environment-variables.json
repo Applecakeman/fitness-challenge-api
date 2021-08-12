@@ -1,0 +1,8 @@
+{
+    "dbConfig": {
+        "host": "API_SERVER",
+        "user": "API_USER",
+        "password": "API_USER_PSWD",
+        "database": "API_DB"
+    }
+}
