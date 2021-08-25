@@ -55,19 +55,7 @@ function authenticateWithApi(req, res, url, client_secret) {
             }
         })
         .then((response) => {
-            connection.query(
-                'insert into tokens(access_token, refresh_token, token_type, expires_in) values(?,?,?,?);',
-                [
-                    response.data.access_token,
-                    response.data.refresh_token,
-                    response.data.token_type,
-                    response.data.expires_in
-                ],
-                (err) => {
-                    if (err) throw err;
-                }
-            );
-            getUserData(res, url);
+            updateUserToken(url, response);
             res.send(response.data);
         })
         .catch((error) => {
@@ -79,26 +67,25 @@ function authenticateWithApi(req, res, url, client_secret) {
         });
 }
 
-function getUserData(res, url) {
-    const params = new URLSearchParams();
-    params.append('id', 'me');
-
+function updateUserToken(url, res) {
     axios
-        .get(url + '/api/users', params, {
+        .get(url + '/api/users/me', {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Accept: 'application/vnd.c2logbook.v1+json'
+                authorization: res.data.token_type + ' ' + res.data.access_token
             }
         })
         .then((response) => {
-            res.send(response.data);
-        })
-        .catch((error) => {
-            if (error.response) {
-                res.status(error.response.status).send(error.response.data);
-            } else {
-                res.status(400).send(error.message);
-            }
+            connection.query(
+                'replace into tokens(user_id, access_token, refresh_token) values(?,?,?);',
+                [
+                    response.data.data.id,
+                    res.data.access_token,
+                    res.data.refresh_token
+                ],
+                (err) => {
+                    if (err) throw err;
+                }
+            );
         });
 }
 
