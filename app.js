@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors);
 app.use('/oauth/access_token', tokens);
+require('./middleware/prod')(app);
 
 const options = {
     key: fs.readFileSync('cert/localhost.key'),
