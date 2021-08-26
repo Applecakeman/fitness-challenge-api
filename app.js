@@ -18,14 +18,14 @@ app.use(cors);
 app.use('/oauth/access_token', tokens);
 require('./middleware/prod')(app);
 
-const options = {
-    key: fs.readFileSync('cert/localhost.key'),
-    cert: fs.readFileSync('cert/localhost.crt')
-};
-
 const port = process.env.PORT || 3000;
 
 if (app.get('env' === 'development')) {
+    const options = {
+        key: fs.readFileSync('cert/localhost.key'),
+        cert: fs.readFileSync('cert/localhost.crt')
+    };
+
     https
         .createServer(options, app)
         .listen(port, () => console.log(`Listening to port ${port}`));
