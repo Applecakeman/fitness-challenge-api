@@ -20,16 +20,11 @@ require('./middleware/prod')(app);
 
 const port = process.env.PORT || 3000;
 
-if (app.get('env' === 'development')) {
-    const options = {
-        key: fs.readFileSync('cert/localhost.key'),
-        cert: fs.readFileSync('cert/localhost.crt')
-    };
+const options = {
+    key: fs.readFileSync('cert/localhost.key'),
+    cert: fs.readFileSync('cert/localhost.crt')
+};
 
-    https
-        .createServer(options, app)
-        .listen(port, () => console.log(`Listening to port ${port}`));
-} else
-    https
-        .createServer(app)
-        .listen(port, () => console.log(`Listening to port ${port}`));
+https
+    .createServer(options, app)
+    .listen(port, () => console.log(`Listening to port ${port}`));
