@@ -25,6 +25,11 @@ const options = {
 
 const port = process.env.PORT || 3000;
 
-https
-    .createServer(options, app)
-    .listen(port, () => console.log(`Listening to port ${port}`));
+if (app.get('env' === 'development')) {
+    https
+        .createServer(options, app)
+        .listen(port, () => console.log(`Listening to port ${port}`));
+} else
+    https
+        .createServer(app)
+        .listen(port, () => console.log(`Listening to port ${port}`));
