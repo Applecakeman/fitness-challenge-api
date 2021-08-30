@@ -30,7 +30,7 @@ if (app.get('env' === 'development')) {
     options = {
         key: fs.readFileSync('cert/server.key'),
         cert: fs.readFileSync('cert/server.crt'),
-        ca: [fs.readFileSync('cert/gd1.crt'), fs.readFileSync('cert/gd2.crt')]
+        ca: fs.readFileSync('cert/gd_bundle.crt')
     };
 }
 
