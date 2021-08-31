@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
         grant_type: Joi.string(),
         redirect_uri: Joi.string(),
         code: Joi.string(),
-        scope: Joi.string()
+        scope: Joi.string(),
+        url: Joi.string()
     });
 
     const result = schema.validate({
@@ -19,7 +20,8 @@ router.post('/', (req, res) => {
         grant_type: req.body.grant_type,
         redirect_uri: req.body.redirect_uri,
         code: req.body.code,
-        scope: req.body.scope
+        scope: req.body.scope,
+        url: req.body.url
     });
 
     if (result.error) {
@@ -27,13 +29,17 @@ router.post('/', (req, res) => {
         return;
     }
 
-    const url = 'https://log-dev.concept2.com';
+    const url = req.body.url;
     connection.query(
         'select client_secret from apis where url like ?;',
         [url],
         (err, rows) => {
             if (err) throw err;
-            authenticateWithApi(req, res, url, rows[0].client_secret);
+            if (rows[0] !== undefined)
+                authenticateWithApi(req, res, url, rows[0].client_secret);
+            else {
+                res.status(400).send('url not found in db');
+            }
         }
     );
 });

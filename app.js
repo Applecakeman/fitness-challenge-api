@@ -21,7 +21,7 @@ require('./middleware/prod')(app);
 const port = process.env.PORT || 3000;
 let options;
 
-if (app.get('env' === 'development')) {
+if (app.get('env') === 'development') {
     options = {
         key: fs.readFileSync('cert/localhost.key'),
         cert: fs.readFileSync('cert/localhost.crt')
