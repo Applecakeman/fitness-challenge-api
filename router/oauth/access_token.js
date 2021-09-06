@@ -6,6 +6,9 @@ const axios = require('axios');
 const connection = require('../../dbConnection');
 
 router.post('/', (req, res) => {
+    console.log(req.params);
+    console.log(req.body);
+    console.log(req.headers);
     const schema = Joi.object({
         client_id: Joi.string(),
         grant_type: Joi.string(),
@@ -35,9 +38,13 @@ router.post('/', (req, res) => {
         [url],
         (err, rows) => {
             if (err) throw err;
-            if (rows[0] !== undefined)
-                authenticateWithApi(req, res, url, rows[0].client_secret);
-            else {
+            if (rows[0] !== undefined) {
+                if (req.body.grant_type === 'authorization_code')
+                    authenticateWithApi(req, res, url, rows[0].client_secret);
+                else if (req.body.grant_type === 'refresh_token')
+                    console.log('refresh');
+                // getRefreshToken();
+            } else {
                 res.status(400).send('url not found in db');
             }
         }
