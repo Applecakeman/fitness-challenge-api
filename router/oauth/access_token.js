@@ -104,15 +104,11 @@ function authenticateWithApi(req, res, url, client_secret) {
         });
 }
 
-function updateUserToken(url, res, grant_type) {
-    const token =
-        grant_type == 'refresh_token'
-            ? res.data.refresh_token
-            : res.data.access_token;
+function updateUserToken(url, res) {
     axios
         .get(url + '/api/users/me', {
             headers: {
-                authorization: res.data.token_type + ' ' + token
+                authorization: res.data.token_type + ' ' + res.data.access_token
             }
         })
         .then((response) => {
