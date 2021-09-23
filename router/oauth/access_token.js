@@ -127,6 +127,9 @@ function updateUserToken(url, res, grant_type) {
                     if (err) throw err;
                 }
             );
+        })
+        .catch((error) => {
+            console.log(error);
         });
 }
 
