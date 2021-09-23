@@ -6,24 +6,47 @@ const axios = require('axios');
 const connection = require('../../dbConnection');
 
 router.post('/', (req, res) => {
+    let result;
     console.log(req.body);
-    const schema = Joi.object({
-        client_id: Joi.string(),
-        grant_type: Joi.string(),
-        redirect_uri: Joi.string(),
-        code: Joi.string(),
-        scope: Joi.string(),
-        url: Joi.string()
-    });
+    if (req.body.grant_type === 'authorization_code') {
+        const schema = Joi.object({
+            client_id: Joi.string(),
+            grant_type: Joi.string(),
+            redirect_uri: Joi.string(),
+            code: Joi.string(),
+            scope: Joi.string(),
+            url: Joi.string()
+        });
 
-    const result = schema.validate({
-        client_id: req.body.client_id,
-        grant_type: req.body.grant_type,
-        redirect_uri: req.body.redirect_uri,
-        code: req.body.code,
-        scope: req.body.scope,
-        url: req.body.url
-    });
+        result = schema.validate({
+            client_id: req.body.client_id,
+            grant_type: req.body.grant_type,
+            redirect_uri: req.body.redirect_uri,
+            code: req.body.code,
+            scope: req.body.scope,
+            url: req.body.url
+        });
+    } else if (req.body.grant_type === 'refresh_token') {
+        const schema = Joi.object({
+            client_id: Joi.string(),
+            user_id: Joi.string(),
+            grant_type: Joi.string(),
+            redirect_uri: Joi.string(),
+            code: Joi.string(),
+            scope: Joi.string(),
+            url: Joi.string()
+        });
+
+        result = schema.validate({
+            client_id: req.body.client_id,
+            user_id: req.body.user_id,
+            grant_type: req.body.grant_type,
+            redirect_uri: req.body.redirect_uri,
+            code: req.body.code,
+            scope: req.body.scope,
+            url: req.body.url
+        });
+    }
 
     if (result.error) {
         res.status(400).send(result.error.details);
@@ -46,7 +69,7 @@ router.post('/', (req, res) => {
 });
 
 function authenticateWithApi(req, res, url, client_secret) {
-    const user_id = 491; //todo get user_id from frontend
+    // const user_id = 491; //todo get user_id from frontend
     const params = new URLSearchParams();
     if (req.body.grant_type === 'authorization_code') {
         params.append('client_id', req.body.client_id);
@@ -56,23 +79,12 @@ function authenticateWithApi(req, res, url, client_secret) {
         params.append('code', req.body.code);
         params.append('scope', req.body.scope);
     } else if (req.body.grant_type === 'refresh_token') {
-        connection.query(
-            'select refresh_token from tokens where user_id = ?;',
-            [user_id],
-            (err, rows) => {
-                if (err) throw err;
-                if (rows[0] !== undefined) {
-                    params.append('client_id', req.body.client_id);
-                    params.append('client_secret', client_secret);
-                    params.append('grant_type', req.body.grant_type);
-                    params.append('redirect_uri', req.body.redirect_uri);
-                    params.append('refresh_token', rows[0].refresh_token);
-                    params.append('scope', req.body.scope);
-                } else {
-                    res.status(400).send('refresh token not found in db');
-                }
-            }
-        );
+        params.append('client_id', req.body.client_id);
+        params.append('client_secret', client_secret);
+        params.append('grant_type', req.body.grant_type);
+        params.append('redirect_uri', req.body.redirect_uri);
+        params.append('refresh_token', req.body.refresh_token);
+        params.append('scope', req.body.scope);
     }
     axios
         .post(url + '/oauth/access_token', params, {
