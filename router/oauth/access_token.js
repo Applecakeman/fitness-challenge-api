@@ -29,20 +29,18 @@ router.post('/', (req, res) => {
     } else if (req.body.grant_type === 'refresh_token') {
         const schema = Joi.object({
             client_id: Joi.string(),
-            user_id: Joi.string(),
             grant_type: Joi.string(),
             redirect_uri: Joi.string(),
-            code: Joi.string(),
+            refresh_token: Joi.string(),
             scope: Joi.string(),
             url: Joi.string()
         });
 
         result = schema.validate({
             client_id: req.body.client_id,
-            user_id: req.body.user_id,
             grant_type: req.body.grant_type,
             redirect_uri: req.body.redirect_uri,
-            code: req.body.code,
+            refresh_token: req.body.refresh_token,
             scope: req.body.scope,
             url: req.body.url
         });
@@ -69,7 +67,6 @@ router.post('/', (req, res) => {
 });
 
 function authenticateWithApi(req, res, url, client_secret) {
-    // const user_id = 491; //todo get user_id from frontend
     const params = new URLSearchParams();
     if (req.body.grant_type === 'authorization_code') {
         params.append('client_id', req.body.client_id);
@@ -94,9 +91,7 @@ function authenticateWithApi(req, res, url, client_secret) {
             }
         })
         .then((response) => {
-            if (req.body.grant_type === 'authorization_code')
-                updateUserToken(url, response);
-            else console.log('refresh_token');
+            updateUserToken(url, response, req.body.grant_type);
 
             res.send(response.data);
         })
@@ -109,11 +104,15 @@ function authenticateWithApi(req, res, url, client_secret) {
         });
 }
 
-function updateUserToken(url, res) {
+function updateUserToken(url, res, grant_type) {
+    const token =
+        grant_type == 'refresh_token'
+            ? res.data.refresh_token
+            : res.data.access_token;
     axios
         .get(url + '/api/users/me', {
             headers: {
-                authorization: res.data.token_type + ' ' + res.data.access_token
+                authorization: res.data.token_type + ' ' + token
             }
         })
         .then((response) => {
