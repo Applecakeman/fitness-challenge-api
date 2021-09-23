@@ -126,6 +126,7 @@ function updateUserToken(url, res) {
         })
         .catch((error) => {
             console.log(error);
+            res.status(401).send(error.message);
         });
 }
 
