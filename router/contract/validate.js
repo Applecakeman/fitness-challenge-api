@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const Joi = require('joi');
 const axios = require('axios');
 const connection = require('../../dbConnection');
 
 router.get('/', (req, res) => {
+    console.log(req);
     connection.query(
         'select access_token from tokens where user_id like ?;',
         [req.body.user_id],
