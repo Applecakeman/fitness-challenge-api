@@ -3,6 +3,7 @@
 const https = require('https');
 const fs = require('fs');
 const tokens = require('./router/oauth/access_token');
+const validate = require('./router/contract/validate');
 
 const cors = require('./middleware/cors');
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors);
 app.use('/oauth/access_token', tokens);
+app.use('/contract/validate', validate);
 require('./middleware/prod')(app);
 
 const port = process.env.PORT || 3000;

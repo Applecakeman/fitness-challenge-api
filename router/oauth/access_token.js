@@ -84,7 +84,7 @@ function authenticateWithApi(req, res, url, client_secret) {
         params.append('scope', req.body.scope);
     }
     axios
-        .post(url + '/oauth/access_token', params, {
+        .post(`${url}/oauth/access_token`, params, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 Accept: 'application/vnd.c2logbook.v1+json'
@@ -106,9 +106,9 @@ function authenticateWithApi(req, res, url, client_secret) {
 
 function updateUserToken(url, res) {
     axios
-        .get(url + '/api/users/me', {
+        .get(`${url}/api/users/me`, {
             headers: {
-                authorization: res.data.token_type + ' ' + res.data.access_token
+                authorization: `${res.data.token_type} ${res.data.access_token}`
             }
         })
         .then((response) => {
