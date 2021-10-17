@@ -47,7 +47,7 @@ router.post('/', (req, res) => {
     }
 
     if (result.error) {
-        res.status(400).send(result.error.details);
+        res.status(result.error.status).send(result.error.details);
         return;
     }
 
@@ -97,9 +97,16 @@ function authenticateWithApi(req, res, url, client_secret) {
         })
         .catch((error) => {
             if (error.response) {
-                res.status(error.response.status).send(error.response.data);
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                res.status(error.response.status).send(error.message);
+            } else if (error.request) {
+                console.log(error.request);
+                res.send(`${error.message}\n${error.request}`);
             } else {
-                res.status(400).send(error.message);
+                console.log('Error', error.message);
+                res.send(error.message);
             }
         });
 }
@@ -125,8 +132,18 @@ function updateUserToken(url, res) {
             );
         })
         .catch((error) => {
-            console.log(error);
-            res.status(401).send(error.message);
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                res.status(error.response.status).send(error.message);
+            } else if (error.request) {
+                console.log(error.request);
+                res.send(`${error.message}\n${error.request}`);
+            } else {
+                console.log('Error', error.message);
+                res.send(error.message);
+            }
         });
 }
 
