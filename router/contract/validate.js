@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     console.log(req.body);
-    res.send(true);
+    res.send({ proof: true });
+    console.log(res.data.body);
     // console.log(req.body.user_id);
     // connection.query(
     //     'select access_token from tokens where user_id like ?;',
