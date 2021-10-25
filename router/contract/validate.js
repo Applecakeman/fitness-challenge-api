@@ -5,8 +5,9 @@ const router = express.Router();
 // const connection = require('../../dbConnection');
 
 router.get('/', (req, res) => {
-    console.log(req.body);
-    res.send({ proof: true });
+    const proofRes = { proof: true };
+    console.log(proofRes);
+    res.send(proofRes);
     // console.log(req.body.user_id);
     // connection.query(
     //     'select access_token from tokens where user_id like ?;',
