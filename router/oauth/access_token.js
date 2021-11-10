@@ -105,6 +105,7 @@ function authenticateWithApi(req, res, url, client_secret) {
             console.log(response.body);
             console.log(response.error);
             console.log(response.data);
+            console.log('No error');
             updateUserToken(url, response, req.body.grant_type);
 
             res.send(response.data);
@@ -133,6 +134,8 @@ function updateUserToken(url, res) {
             }
         })
         .then((response) => {
+            console.log(response.headers);
+            console.log(response.data);
             connection.query(
                 'replace into tokens(user_id, access_token, refresh_token) values(?,?,?);',
                 [
@@ -141,6 +144,8 @@ function updateUserToken(url, res) {
                     res.data.refresh_token
                 ],
                 (err) => {
+                    console.log(err);
+                    console.log('Error');
                     if (err) throw err;
                 }
             );
