@@ -101,7 +101,10 @@ function authenticateWithApi(req, res, url, client_secret) {
             }
         })
         .then((response) => {
-            console.log(`Concept two response:\n ${response}`);
+            console.log(response.headers);
+            console.log(response.body);
+            console.log(response.error);
+            console.log(response.data);
             updateUserToken(url, response, req.body.grant_type);
 
             res.send(response.data);
