@@ -7,6 +7,7 @@ const connection = require('../../dbConnection');
 
 router.post('/', (req, res) => {
     let result;
+    console.log(req);
     console.log(req.body);
     if (req.body.grant_type === 'authorization_code') {
         const schema = Joi.object({
@@ -46,6 +47,8 @@ router.post('/', (req, res) => {
         });
     }
 
+    console.log(res);
+    console.log(`Error: ${result}`);
     if (result.error) {
         res.status(result.error.status).send(result.error.details);
         return;
@@ -56,6 +59,7 @@ router.post('/', (req, res) => {
         'select client_secret from apis where url like ?;',
         [url],
         (err, rows) => {
+            console.log(err);
             if (err) throw err;
             if (rows[0] !== undefined) {
                 authenticateWithApi(req, res, url, rows[0].client_secret);
@@ -91,6 +95,7 @@ function authenticateWithApi(req, res, url, client_secret) {
             }
         })
         .then((response) => {
+            console.log(`Concept two response:\n ${response}`);
             updateUserToken(url, response, req.body.grant_type);
 
             res.send(response.data);
