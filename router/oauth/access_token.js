@@ -107,6 +107,8 @@ function authenticateWithApi(req, res, url, client_secret) {
             console.log(response.data);
             console.log('No error');
             updateUserToken(url, response, req.body.grant_type);
+            console.log('Nice');
+            console.log(response.data);
 
             res.send(response.data);
         })
@@ -145,8 +147,10 @@ function updateUserToken(url, res) {
                 ],
                 (err) => {
                     console.log(err);
-                    console.log('Error');
-                    if (err) throw err;
+                    if (err) {
+                        console.log('Error');
+                        throw err;
+                    }
                 }
             );
         })
