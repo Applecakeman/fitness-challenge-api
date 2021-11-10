@@ -7,7 +7,7 @@ const connection = require('../../dbConnection');
 
 router.post('/', (req, res) => {
     let result;
-    console.log(req);
+    console.log(req.headers);
     console.log(req.body);
     if (req.body.grant_type === 'authorization_code') {
         const schema = Joi.object({
@@ -47,12 +47,18 @@ router.post('/', (req, res) => {
         });
     }
 
-    console.log(res);
-    console.log(`Error: ${result}`);
+    console.log(res.headers);
+    console.log(res.body);
+    console.log(result.headers);
+    console.log(result.body);
+    console.log(result.error);
     if (result.error) {
         res.status(result.error.status).send(result.error.details);
+        console.log('Error occured');
         return;
     }
+
+    console.log('\n\nHello');
 
     const url = req.body.url;
     connection.query(
