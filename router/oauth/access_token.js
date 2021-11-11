@@ -47,25 +47,17 @@ router.post('/', (req, res) => {
     });
   }
 
-  console.log(res.headers);
-  console.log(res.body);
-  console.log(result.headers);
-  console.log(result.body);
-  console.log(result.error);
   if (result.error) {
     res.status(result.error.status).send(result.error.details);
     console.log('Error occured');
     return;
   }
 
-  console.log('\n\nHello');
-
   const url = req.body.url;
   connection.query(
     'select client_secret from apis where url like ?;',
     [url],
     (err, rows) => {
-      console.log(err);
       if (err) throw err;
       if (rows[0] !== undefined) {
         authenticateWithApi(req, res, url, rows[0].client_secret);
