@@ -4,6 +4,7 @@ const https = require('https');
 const fs = require('fs');
 const tokens = require('./router/oauth/access_token');
 const validate = require('./router/contract/validate');
+const users = require('./router/data/users');
 
 const cors = require('./middleware/cors');
 
@@ -18,24 +19,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors);
 app.use('/oauth/access_token', tokens);
 app.use('/contract/validate', validate);
+app.use('/data/users', users);
 require('./middleware/prod')(app);
 
 const port = process.env.PORT || 3000;
 let options;
 
 if (app.get('env') === 'development') {
-    options = {
-        key: fs.readFileSync('cert/localhost.key'),
-        cert: fs.readFileSync('cert/localhost.crt')
-    };
+  options = {
+    key: fs.readFileSync('cert/localhost.key'),
+    cert: fs.readFileSync('cert/localhost.crt')
+  };
 } else {
-    options = {
-        key: fs.readFileSync('cert/server.key'),
-        cert: fs.readFileSync('cert/server.crt'),
-        ca: fs.readFileSync('cert/gd_bundle.crt')
-    };
+  options = {
+    key: fs.readFileSync('cert/server.key'),
+    cert: fs.readFileSync('cert/server.crt'),
+    ca: fs.readFileSync('cert/gd_bundle.crt')
+  };
 }
 
 https
-    .createServer(options, app)
-    .listen(port, () => console.log(`Listening to port ${port}`));
+  .createServer(options, app)
+  .listen(port, () => console.log(`Listening to port ${port}`));

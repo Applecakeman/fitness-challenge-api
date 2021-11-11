@@ -5,28 +5,28 @@ const router = express.Router();
 // const connection = require('../../dbConnection');
 
 router.get('/', (req, res) => {
-    const proofRes = { proof: true };
-    console.log(proofRes);
-    res.send(proofRes);
-    // console.log(req.body.user_id);
-    // connection.query(
-    //     'select access_token from tokens where user_id like ?;',
-    //     [req.body.user_id],
-    //     (err, rows) => {
-    //         if (err) throw err;
-    //         if (rows[0] !== undefined) {
-    //             console.log(rows[0].access_token);
-    //             getResults(
-    //                 res,
-    //                 req.body.url,
-    //                 rows[0].access_token,
-    //                 req.body.user_id
-    //             );
-    //         } else {
-    //             res.status(400).send('user access_token not found');
-    //         }
-    //     }
-    // );
+  const proofRes = { proof: true };
+  console.log(proofRes);
+  res.send(proofRes);
+  // console.log(req.body.user_id);
+  // connection.query(
+  //     'select access_token from tokens where user_id like ?;',
+  //     [req.body.user_id],
+  //     (err, rows) => {
+  //         if (err) throw err;
+  //         if (rows[0] !== undefined) {
+  //             console.log(rows[0].access_token);
+  //             getResults(
+  //                 res,
+  //                 req.body.url,
+  //                 rows[0].access_token,
+  //                 req.body.user_id
+  //             );
+  //         } else {
+  //             res.status(400).send('user access_token not found');
+  //         }
+  //     }
+  // );
 });
 
 // function getResults(res, url, access_token, user_id) {
