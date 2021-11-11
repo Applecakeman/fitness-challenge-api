@@ -25,7 +25,7 @@ async function getUserData(req, res) {
     res.send(resp.data);
   } catch (err) {
     console.error(err.message);
-    res.send(err);
+    res.status(err.status).send(err);
   }
 }
 
@@ -51,7 +51,7 @@ async function getResultData(req, res) {
     res.send(resp.data);
   } catch (err) {
     console.error(err.message);
-    res.send(err);
+    res.status(err.status).send(err);
   }
 }
 
