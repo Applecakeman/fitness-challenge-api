@@ -1,40 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
-const Joi = require('joi');
 const axios = require('axios');
 
-router.get('/:id', (req, res) => {
-  let result;
-
+router.get('/:url/:access_token/:id', (req, res) => {
   console.log(req.headers);
-  console.log(req.body);
+  console.log(req.params);
 
-  const schema = Joi.object({
-    url: Joi.string(),
-    access_token: Joi.string()
-  });
-
-  result = schema.validate({
-    url: req.body.url,
-    access_token: req.body.access_token
-  });
-
-  if (result.error) {
-    res.status(result.error.status).send(result.error.details);
-    console.log('Error occured');
-    return;
-  }
   getUserData(req, res);
 });
 
 async function getUserData(req, res) {
   try {
-    const resp = await axios.get(`${req.body.url}/api/users/${req.params.id}`, {
-      headers: {
-        authorization: `Bearer ${req.body.access_token}`
+    const resp = await axios.get(
+      `https://${req.params.url}/api/users/${req.params.id}`,
+      {
+        headers: {
+          authorization: `Bearer ${req.params.access_token}`
+        }
       }
-    });
+    );
 
     console.log(resp.data);
     res.send(resp.data);
@@ -44,37 +29,20 @@ async function getUserData(req, res) {
   }
 }
 
-router.get('/:id/results', (req, res) => {
-  let result;
-
+router.get('/:url/:access_token/:id/results', (req, res) => {
   console.log(req.headers);
-  console.log(req.body);
+  console.log(req.params);
 
-  const schema = Joi.object({
-    url: Joi.string(),
-    access_token: Joi.string()
-  });
-
-  result = schema.validate({
-    url: req.body.url,
-    access_token: req.body.access_token
-  });
-
-  if (result.error) {
-    res.status(result.error.status).send(result.error.details);
-    console.log('Error occured');
-    return;
-  }
   getResultData(req, res);
 });
 
 async function getResultData(req, res) {
   try {
     const resp = await axios.get(
-      `${req.body.url}/api/users/${req.params.id}/results`,
+      `https://${req.params.url}/api/users/${req.params.id}/results`,
       {
         headers: {
-          authorization: `Bearer ${req.body.access_token}`
+          authorization: `Bearer ${req.params.access_token}`
         }
       }
     );
